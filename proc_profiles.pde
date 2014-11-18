@@ -33,6 +33,10 @@ void buildProfile(TableRow row) {
   background(255);
   shape(template, 0, 0);
   
+  fill(0);
+  textSize(24);
+  text(fullCountyName, 20, 100);
+  
   
   /* ----------- Sizing Up Text ------------ */
   String popsize = getString(row, "PopulationSize");
@@ -50,6 +54,10 @@ void buildProfile(TableRow row) {
   String sizeText1 = fullCountyName + " has a county government.";
   String sizeText2 = countyName + " is a " + popsize + centralText + " county" + metroText;
   
+  textSize(12);
+  text(sizeText1, 20, 360);
+  text(sizeText2, 28, 390, 180, 100);
+  
   /* ------------ Sizing Up Numbers -------------- */
   int population = row.getInt("Population");
   int gdp = row.getInt("RGDP2014");
@@ -66,6 +74,17 @@ void buildProfile(TableRow row) {
   String avgPayGrowthText = nf(avg_pay_growth, 0, 1) + "%";
   String unempRateText = nf(unemp_rate, 0, 1) + "%";
   
+  /* --------------- Top Half Text -------------------- */
+  String unemgrowth14 = nf(row.getFloat("unemgrowth14"), 0, 1);
+  String jobsgrowth14 = nf(row.getFloat("jobsgrowth14"), 0, 1);
+  String rgdpgrowth14 = nf(row.getFloat("rgdpgrowth14"), 0, 1);
+  String hhpricegrowth14 = nf(row.getFloat("hhpricegrowth14"), 0, 1);
+  
+  fill(0);
+  text(unemgrowth14 + "PPS", 150, 170);
+  text(jobsgrowth14 + "%", 320, 170);
+  text(rgdpgrowth14 + "%", 490, 170);
+  text(hhpricegrowth14 + "%", 660, 170);
   
   /* --------------- Graph Data -------------------- */
   fill(0);
@@ -214,7 +233,7 @@ void buildProfile(TableRow row) {
 
 
   /* --------------- Bar Data -------------------- */
-  float barGraphHeight = 15, barGraphWidth = 100, barSep = 50;
+  float barGraphHeight = 15, barGraphWidth = 100, barSep = 40;
   float barOriginX = 550, barOriginsY = 350;
   float baseGDP = 0;
   
@@ -222,17 +241,21 @@ void buildProfile(TableRow row) {
     float barOriginY = barOriginsY + barSep * (i - 1);
     
     String description = getString(row, "industry_desc" + i);
-    float gdpVal = row.getFloat("industry_gdp" + i);    
+    float gdpVal = row.getFloat("industry_gdp" + i);  
+    float gdpShare = row.getFloat("industry_gdp_share" + i); 
+    
     if (i == 1) baseGDP = gdpVal; 
     float barWidth = (gdpVal / baseGDP) * barGraphWidth;
     
-    println("gdp: " + gdpVal + ", baseGDP: " + baseGDP + ", barWidth: " + barWidth);
-    
+    String gdpValStr = "$" + nfc(gdpVal, 0);
+    if (gdpVal > 1000000) gdpValStr = "$" + nf(gdpVal, 0, 1) + " MILLION";
+    String gdpShareStr = nf(gdpShare, 0, 1) + "%";
+        
     textAlign(LEFT);
-    text(description, barOriginX, barOriginY);
+    text(description + " - " + gdpValStr + " - " + gdpShareStr, barOriginX, barOriginY);
     strokeWeight(0);
     fill(150);
-    rect(barOriginX, barOriginY + 10, barWidth, barGraphHeight);
+    rect(barOriginX, barOriginY + 5, barWidth, barGraphHeight);
   }
   
   endRecord();   
