@@ -74,6 +74,8 @@ void buildProfile(TableRow row) {
   String avgPayGrowthText = nf(avg_pay_growth, 0, 1) + "%";
   String unempRateText = nf(unemp_rate, 0, 1) + "%";
   
+  text("population, 2013", 300, 360);
+  
   /* --------------- Top Half Text -------------------- */
   String unemgrowth14 = nf(row.getFloat("unemgrowth14"), 0, 1);
   String jobsgrowth14 = nf(row.getFloat("jobsgrowth14"), 0, 1);
